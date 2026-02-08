@@ -7,7 +7,7 @@
     
     <!-- SNS OGP Settings -->
     <meta property="og:title" content="Olympic Dual Clock - Italy & Japan">
-    <meta property="og:description" content="イタリアと日本の時間をひと目で確認。24時間表記です☺️">
+    <meta property="og:description" content="イタリアと日本の時間をひと目で。">
     <meta property="og:image" content="https://torusk.github.io/olympic-clock/og-image.png">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://torusk.github.io/olympic-clock/">
@@ -44,14 +44,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 40px 0;
+            padding: 40px 0; /* バッジを消した分、上下の余白を調整 */
             width: 100%;
         }
 
         /* 緑・白・赤のイタリア国旗グラデーション */
         .time-text {
             font-family: 'JetBrains+Mono', monospace;
-            font-size: clamp(6rem, 28vw, 9.5rem);
+            font-size: clamp(6rem, 28vw, 9.5rem); /* バッジがない分、少しサイズを強調 */
             font-weight: 800;
             line-height: 1.2;
             letter-spacing: -0.06em;
@@ -95,22 +95,6 @@
             margin-bottom: 1rem;
         }
 
-        .share-btn {
-            margin-top: 50px;
-            font-size: 11px;
-            font-weight: bold;
-            letter-spacing: 0.25em;
-            text-transform: uppercase;
-            color: #94a3b8;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            opacity: 0.6;
-        }
-        .share-btn:hover {
-            opacity: 1;
-            color: #1e293b;
-        }
-
         .snowflake-bg {
             position: fixed;
             top: 5%;
@@ -135,80 +119,21 @@
         </div>
 
         <div class="time-display-container w-full">
-            <!-- AM/PMバッジを削除 -->
-            <div id="it-time" class="time-text">00:00</div>
+            <!-- AM/PMバッジを削除し、時刻のみに -->
+            <div class="time-text">20:26</div>
             
-            <div id="it-date" class="date-text">--.--(---)</div>
+            <div class="date-text">02.08(SUN)</div>
             
             <div class="jp-sub-time">
-                <span class="text-[12px] font-black mr-2 opacity-50">JPN</span>
-                <span id="jp-time">00:00</span>
+                <span class="text-[12px] font-black mr-2 opacity-50">JPN (NEXT DAY)</span>
+                <span>04:26</span>
             </div>
         </div>
 
-        <button onclick="share()" class="share-btn">
-            <i class="fab fa-x-twitter mr-2"></i> SHARE STATUS
-        </button>
+        <div class="mt-10 opacity-30 text-[10px] tracking-[0.5em] font-bold">
+            COMMEMORATIVE EDITION
+        </div>
     </div>
 
-    <script>
-        function update() {
-            try {
-                const now = new Date();
-
-                // Italy Time (24h)
-                const itFormatter = new Intl.DateTimeFormat('ja-JP', {
-                    timeZone: 'Europe/Rome',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
-                document.getElementById('it-time').textContent = itFormatter.format(now);
-                
-                // Italy Date
-                const dateFormatter = new Intl.DateTimeFormat('ja-JP', {
-                    timeZone: 'Europe/Rome',
-                    month: '2-digit',
-                    day: '2-digit'
-                });
-                const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
-                    timeZone: 'Europe/Rome',
-                    weekday: 'short'
-                });
-
-                const dateStr = dateFormatter.format(now).replace(/\//g, '.');
-                const weekStr = weekdayFormatter.format(now).toUpperCase();
-                
-                document.getElementById('it-date').textContent = `${dateStr}(${weekStr})`;
-
-                // Japan Time (24h)
-                const jpFormatter = new Intl.DateTimeFormat('ja-JP', {
-                    timeZone: 'Asia/Tokyo',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
-                document.getElementById('jp-time').textContent = jpFormatter.format(now);
-                
-            } catch (e) {
-                console.error("Update error:", e);
-            }
-        }
-
-        function share() {
-            const itTime = document.getElementById('it-time').textContent;
-            const jpTime = document.getElementById('jp-time').textContent;
-            const text = `🇮🇹 Italy: ${itTime} / 🇯🇵 Japan: ${jpTime}\n#OlympicClock #MilanoCortina2026`;
-            const url = window.location.href;
-            if (navigator.share) {
-                navigator.share({ title: 'Olympic Clock', text: text, url: url });
-            } else {
-                window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
-            }
-        }
-
-        setInterval(update, 1000);
-        update();
-    </script>
 </body>
 </html>
