@@ -10,6 +10,7 @@
     <meta property="og:description" content="イタリアと日本の時間をひと目で。冬のオリンピック・デザイン・エディション。">
     <meta property="og:image" content="https://torusk.github.io/olympic-clock/og-image.png">
     <meta property="og:type" content="website">
+    <meta property="og:url" content="https://torusk.github.io/olympic-clock/">
     <meta name="twitter:card" content="summary_large_image">
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,214 +21,200 @@
         body {
             font-family: 'Noto Sans JP', sans-serif;
             background: #ffffff;
-            color: #2c3e50;
+            color: #1e293b;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(224, 242, 254, 0.5) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(240, 249, 255, 0.5) 0px, transparent 50%);
-        }
-
-        .clock-container {
-            width: 100%;
-            max-width: 440px;
-            padding: 20px;
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            border-radius: 50px;
-            padding: 50px 35px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.04);
-            position: relative;
             overflow: hidden;
         }
 
-        /* 時刻のグラデーション: イタリアン・ジュエルカラー */
+        .clock-wrapper {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 時刻表示のコンテナ: グラデーションのクリップが切れないようにpaddingを調整 */
+        .time-display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        /* メイン時刻: 垂直方向の見切れを防ぐために line-height と padding を調整 */
         .time-text {
             font-family: 'JetBrains+Mono', monospace;
-            font-size: 6.5rem;
+            font-size: clamp(5rem, 25vw, 8.5rem);
             font-weight: 800;
-            line-height: 0.85;
+            line-height: 1.1; /* 見切れ防止のため少し余裕を持たせる */
             letter-spacing: -0.06em;
             background: linear-gradient(135deg, #008c45 0%, #1e293b 50%, #cd212a 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             display: inline-block;
+            white-space: nowrap;
+            padding: 0.1em 0; /* 上下の見切れを物理的に防ぐ */
         }
 
         .kanji-badge {
-            font-size: 4.5rem;
+            font-size: clamp(3rem, 15vw, 5rem);
             font-weight: 900;
             line-height: 1;
-            margin-bottom: 5px;
+            margin-bottom: -0.2em; /* 時刻との距離を調整 */
             letter-spacing: -0.05em;
-            opacity: 0.15;
-            transition: color 1s ease;
+            opacity: 0.1;
         }
 
-        .sub-card {
-            margin-top: 24px;
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-        }
-
-        .snow-glow {
-            position: absolute;
-            top: -20%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(186, 230, 253, 0.3) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
-        }
-
-        .snowflake-icon {
-            filter: drop-shadow(0 0 10px rgba(186, 230, 253, 0.8));
-            animation: rotate-slow 12s linear infinite;
-        }
-
-        @keyframes rotate-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        .winter-title {
-            font-weight: 100;
-            letter-spacing: 0.8em;
-            font-size: 0.65rem;
+        .jp-sub-time {
+            margin-top: 10px;
+            font-family: 'JetBrains+Mono', monospace;
+            font-size: 1.4rem;
+            font-weight: 500;
             color: #94a3b8;
+            letter-spacing: 0.1em;
+        }
+
+        .date-text {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-top: 25px;
+        }
+
+        .country-label {
+            font-weight: 900;
+            letter-spacing: 0.4em;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
         }
 
         .share-btn {
-            font-size: 10px;
+            margin-top: 50px;
+            font-size: 11px;
             font-weight: bold;
-            letter-spacing: 0.3em;
+            letter-spacing: 0.25em;
             text-transform: uppercase;
-            color: #94a3b8;
-            border: 1px solid #f1f5f9;
-            padding: 8px 24px;
-            border-radius: 9999px;
+            color: #e2e8f0;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
         .share-btn:hover {
-            background: #f8fafc;
-            color: #64748b;
-            border-color: #e2e8f0;
+            color: #94a3b8;
+        }
+
+        .snowflake-bg {
+            position: fixed;
+            top: 5%;
+            right: 5%;
+            font-size: clamp(5rem, 20vw, 10rem);
+            color: #f8fafc;
+            z-index: -1;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
-    <div class="clock-container">
-        <h1 class="text-center winter-title mb-12">Olympic Dual Tracker</h1>
+    <div class="snowflake-bg">
+        <i class="fas fa-snowflake"></i>
+    </div>
 
-        <!-- Italy (Main Clock) -->
-        <div id="it-card" class="glass-card">
-            <div id="it-bg" class="snow-glow"></div>
-            
-            <div class="relative z-10 text-center">
-                <div class="flex justify-between items-center mb-10 px-2">
-                    <div class="flex items-center gap-3">
-                        <span class="text-3xl">🇮🇹</span>
-                        <span class="font-bold text-xs tracking-widest text-slate-400">ITALIA</span>
-                    </div>
-                    <div id="it-icon" class="text-3xl text-blue-100 snowflake-icon">
-                        <i class="fas fa-snowflake"></i>
-                    </div>
-                </div>
-
-                <div class="flex flex-col items-center">
-                    <div id="it-kanji" class="kanji-badge text-slate-400">午前</div>
-                    <div id="it-time" class="time-text">00:00</div>
-                    
-                    <div class="flex items-center gap-4 mt-8 w-full justify-center">
-                        <div class="h-[1px] flex-1 bg-slate-100"></div>
-                        <div id="it-date" class="text-xs font-bold text-slate-400 uppercase tracking-[0.2em]">--/-- ---</div>
-                        <div class="h-[1px] flex-1 bg-slate-100"></div>
-                    </div>
-                </div>
-            </div>
+    <div class="clock-wrapper">
+        <!-- Italy Section -->
+        <div class="country-label">
+            <span>🇮🇹</span>
+            <span>MILANO CORTINA</span>
         </div>
 
-        <!-- Japan (Sub Clock) -->
-        <div class="sub-card">
-            <div class="flex items-center gap-5">
-                <span class="text-2xl">🇯🇵</span>
-                <div class="flex items-baseline gap-3">
-                    <span id="jp-kanji" class="font-black text-slate-300 text-lg">午後</span>
-                    <span id="jp-time" class="font-mono text-3xl font-bold tracking-tighter text-slate-600">00:00</span>
-                </div>
+        <div class="time-display-container w-full">
+            <div id="it-kanji" class="kanji-badge">午前</div>
+            <div id="it-time" class="time-text">00:00</div>
+            
+            <!-- Date & Japan Time -->
+            <div id="it-date" class="date-text">--.--(---)</div>
+            
+            <div class="jp-sub-time">
+                <span class="text-[11px] font-black mr-2 opacity-50">JPN</span>
+                <span id="jp-time">00:00</span>
             </div>
-            <div id="jp-date" class="text-[10px] font-black text-slate-300 tracking-widest uppercase">Tokyo</div>
         </div>
 
         <!-- Share Button -->
-        <div class="mt-12 text-center">
-            <button onclick="share()" class="share-btn">
-                <i class="fab fa-x-twitter mr-2"></i> Post Status
-            </button>
-        </div>
+        <button onclick="share()" class="share-btn">
+            <i class="fab fa-x-twitter mr-2"></i> SHARE STATUS
+        </button>
     </div>
 
     <script>
         function update() {
-            const now = new Date();
+            try {
+                const now = new Date();
 
-            // Italy Time
-            const itStr = now.toLocaleTimeString('ja-JP', { timeZone: 'Europe/Rome', hour12: false, hour: '2-digit', minute: '2-digit' });
-            const itHour = parseInt(itStr.split(':')[0]);
-            document.getElementById('it-time').textContent = itStr;
-            document.getElementById('it-kanji').textContent = itHour < 12 ? '午前' : '午後';
-            document.getElementById('it-date').textContent = now.toLocaleDateString('ja-JP', { timeZone: 'Europe/Rome', month: '2-digit', day: '2-digit', weekday: 'short' }).replace(/\//g, '.');
+                // Italy Time
+                const itFormatter = new Intl.DateTimeFormat('ja-JP', {
+                    timeZone: 'Europe/Rome',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                const itTimeStr = itFormatter.format(now);
+                const itHour = parseInt(itTimeStr.split(':')[0]);
+                
+                document.getElementById('it-time').textContent = itTimeStr;
+                document.getElementById('it-kanji').textContent = itHour < 12 ? '午前' : '午後';
+                
+                // Italy Date & Weekday
+                const dateFormatter = new Intl.DateTimeFormat('ja-JP', {
+                    timeZone: 'Europe/Rome',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+                const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'Europe/Rome',
+                    weekday: 'short'
+                });
 
-            // Japan Time
-            const jpStr = now.toLocaleTimeString('ja-JP', { timeZone: 'Asia/Tokyo', hour12: false, hour: '2-digit', minute: '2-digit' });
-            const jpHour = parseInt(jpStr.split(':')[0]);
-            document.getElementById('jp-time').textContent = jpStr;
-            document.getElementById('jp-kanji').textContent = jpHour < 12 ? '午前' : '午後';
+                const dateStr = dateFormatter.format(now).replace(/\//g, '.');
+                const weekStr = weekdayFormatter.format(now).toUpperCase();
+                
+                document.getElementById('it-date').textContent = `${dateStr}(${weekStr})`;
 
-            updateWinterTheme(itHour);
-        }
-
-        function updateWinterTheme(hour) {
-            const kanji = document.getElementById('it-kanji');
-            const bg = document.getElementById('it-bg');
-            const icon = document.getElementById('it-icon');
-
-            if (hour >= 5 && hour < 11) {
-                kanji.style.color = '#008c45'; // Green for morning
-                bg.style.background = 'radial-gradient(circle, rgba(204, 251, 241, 0.4) 0%, transparent 70%)';
-            } else if (hour >= 11 && hour < 17) {
-                kanji.style.color = '#64748b'; // Slate for day
-                bg.style.background = 'radial-gradient(circle, rgba(186, 230, 253, 0.4) 0%, transparent 70%)';
-            } else if (hour >= 17 && hour < 21) {
-                kanji.style.color = '#cd212a'; // Red for evening
-                bg.style.background = 'radial-gradient(circle, rgba(254, 226, 226, 0.4) 0%, transparent 70%)';
-            } else {
-                kanji.style.color = '#1e293b'; // Dark for night
-                bg.style.background = 'radial-gradient(circle, rgba(226, 232, 240, 0.4) 0%, transparent 70%)';
+                // Japan Time
+                const jpFormatter = new Intl.DateTimeFormat('ja-JP', {
+                    timeZone: 'Asia/Tokyo',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                document.getElementById('jp-time').textContent = jpFormatter.format(now);
+                
+            } catch (e) {
+                console.error("Update error:", e);
             }
         }
 
         function share() {
-            const text = `🇮🇹 イタリアは今、${document.getElementById('it-kanji').textContent} ${document.getElementById('it-time').textContent}\n🇯🇵 日本は ${document.getElementById('jp-time').textContent}\n#OlympicClock #Olympics`;
+            const itTime = document.getElementById('it-time').textContent;
+            const itKanji = document.getElementById('it-kanji').textContent;
+            const jpTime = document.getElementById('jp-time').textContent;
+            const text = `🇮🇹 Italy: ${itKanji} ${itTime} / 🇯🇵 Japan: ${jpTime}\n#OlympicClock #MilanoCortina2026`;
             const url = window.location.href;
-            
             if (navigator.share) {
-                navigator.share({ title: 'Olympic Dual Clock', text: text, url: url });
+                navigator.share({ title: 'Olympic Clock', text: text, url: url });
             } else {
                 window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
             }
