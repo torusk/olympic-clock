@@ -77,7 +77,6 @@
             -webkit-text-fill-color: transparent;
             display: inline-block;
             filter: drop-shadow(0 3px 12px rgba(0,0,0,0.1));
-            /* 常に5文字分の幅を確保して中央を維持 */
             min-width: 1.2em; 
             text-align: center;
         }
@@ -136,13 +135,12 @@
 
             const itFormatter = new Intl.DateTimeFormat('ja-JP', {
                 timeZone: 'Europe/Rome',
-                hour: '2-digit', // ここを2-digitに変更
+                hour: '2-digit',
                 minute: '2-digit',
                 hour12: true
             });
             
             const parts = itFormatter.formatToParts(now);
-            // 0詰めを確実にするため padStart を使用
             let hour = parts.find(p => p.type === 'hour').value.padStart(2, '0');
             const minute = parts.find(p => p.type === 'minute').value;
             const ampm = parts.find(p => p.type === 'dayPeriod').value === '午前' ? 'AM' : 'PM';
@@ -169,6 +167,16 @@
             isProcessing = true;
 
             try {
+                const now = new Date();
+                
+                // 日本時間を取得して AM/PM 形式に変換
+                const jpParts = new Intl.DateTimeFormat('ja-JP', { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', hour12: true }).formatToParts(now);
+                const jpAmPm = jpParts.find(p => p.type === 'dayPeriod').value === '午前' ? 'AM' : 'PM';
+                const jpHour = jpParts.find(p => p.type === 'hour').value.padStart(2, '0');
+                const jpMin = jpParts.find(p => p.type === 'minute').value;
+                const jpTimeStr = `${jpAmPm} ${jpHour}:${jpMin}`;
+
+                // 表示されているイタリア時間を取得
                 const itTime = document.getElementById('it-time').textContent;
                 const itAmpm = document.getElementById('it-ampm').textContent;
 
@@ -184,8 +192,8 @@
                     console.log("Clipboard bypass");
                 }
 
-                // ご指定のテキスト形式に修正
-                const text = `今のイタリア時間は、\n🇮🇹${itAmpm} ${itTime}☺️\n\n#オリンピック | #ミラノ・コルティナ2026\n`;
+                // ツイートテキスト
+                const text = `ただいまの時刻は、\n🇯🇵${jpTimeStr}☺️\n🇮🇹${itAmpm} ${itTime}❄️\n\n#オリンピック | #ミラノ・コルティナ2026`;
                 const url = window.location.href;
                 
                 window.location.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
