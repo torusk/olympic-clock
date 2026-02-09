@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winter Olympic Clock | Italy & Japan</title>
+    
+    <!-- SNS OGP Settings -->
+    <meta property="og:title" content="Olympic Dual Clock - Italy & Japan">
+    <meta property="og:description" content="イタリアの時刻をひと目で確認。24時間表記です☺️">
+    <meta property="og:image" content="https://torusk.github.io/olympic-clock/og-image.png">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://torusk.github.io/olympic-clock/">
+    <meta name="twitter:card" content="summary_large_image">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;400;700;900&family=JetBrains+Mono:wght@500;800&display=swap');
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background: #dbeafe; 
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .clock-wrapper {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-display-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            width: 100%;
+        }
+
+        /* 緑・白・赤のイタリア国旗グラデーション */
+        .time-text {
+            font-family: 'JetBrains+Mono', monospace;
+            font-size: clamp(6rem, 28vw, 9.5rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.06em;
+            background: linear-gradient(to right, #008c45 0%, #ffffff 50%, #cd212a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            white-space: nowrap;
+            padding: 20px 0;
+            margin: 0;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+        }
+
+        .jp-sub-time {
+            margin-top: 15px;
+            font-family: 'JetBrains+Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: #64748b;
+            letter-spacing: 0.1em;
+        }
+
+        .date-text {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #94a3b8;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+
+        .country-label {
+            font-weight: 900;
+            letter-spacing: 0.4em;
+            font-size: 0.8rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .share-btn {
+            margin-top: 50px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: #94a3b8;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .share-btn:hover {
+            opacity: 1;
+            color: #1e293b;
+        }
+
+        .snowflake-bg {
+            position: fixed;
+            top: 5%;
+            right: 5%;
+            font-size: clamp(5rem, 20vw, 10rem);
+            color: #ffffff;
+            z-index: -1;
+            opacity: 0.4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="snowflake-bg">
+        <i class="fas fa-snowflake"></i>
+    </div>
+
+    <div class="clock-wrapper">
+        <div class="country-label">
+            <span>🇮🇹</span>
+            <span>MILANO CORTINA 2026</span>
+        </div>
+
+        <div class="time-display-container w-full">
+            <!-- AM/PMバッジを削除 -->
+            <div id="it-time" class="time-text">00:00</div>
+            
+            <div id="it-date" class="date-text">--.--(---)</div>
+            
+            <div class="jp-sub-time">
+                <span class="text-[12px] font-black mr-2 opacity-50">JPN</span>
+                <span id="jp-time">00:00</span>
+            </div>
+        </div>
+
+        <button onclick="share()" class="share-btn">
+            <i class="fab fa-x-twitter mr-2"></i> SHARE STATUS
+        </button>
+    </div>
+
+    <script>
+        function update() {
+            try {
+                const now = new Date();
+
+                // Italy Time (24h)
+                const itFormatter = new Intl.DateTimeFormat('ja-JP', {
+                    timeZone: 'Europe/Rome',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                document.getElementById('it-time').textContent = itFormatter.format(now);
+                
+                // Italy Date
+                const dateFormatter = new Intl.DateTimeFormat('ja-JP', {
+                    timeZone: 'Europe/Rome',
+                    month: '2-digit',
+                    day: '2-digit'
+                });
+                const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'Europe/Rome',
+                    weekday: 'short'
+                });
+
+                const dateStr = dateFormatter.format(now).replace(/\//g, '.');
+                const weekStr = weekdayFormatter.format(now).toUpperCase();
+                
+                document.getElementById('it-date').textContent = `${dateStr}(${weekStr})`;
+
+                // Japan Time (24h)
+                const jpFormatter = new Intl.DateTimeFormat('ja-JP', {
+                    timeZone: 'Asia/Tokyo',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                document.getElementById('jp-time').textContent = jpFormatter.format(now);
+                
+            } catch (e) {
+                console.error("Update error:", e);
+            }
+        }
+
+        function share() {
+            const itTime = document.getElementById('it-time').textContent;
+            const jpTime = document.getElementById('jp-time').textContent;
+            const text = `🇮🇹 Italy: ${itTime} / 🇯🇵 Japan: ${jpTime}\n#OlympicClock #MilanoCortina2026`;
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: 'Olympic Clock', text: text, url: url });
+            } else {
+                window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`);
+            }
+        }
+
+        setInterval(update, 1000);
+        update();
+    </script>
+</body>
+</html>
